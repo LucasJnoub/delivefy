@@ -1,14 +1,6 @@
-// import { PrismaClient } from "@prisma/client";
-import prisma from "@/lib/prisma";
+import prisma from "../lib/prisma.js";
 import * as bcrypt from "bcrypt";
 
-// const prisma = new PrismaClient({
-//   datasources: {
-//         db: {
-//           url:"postgres://postgres:abc123@104.248.229.81:8080/websocket"
-//         }
-      
-//   }})
 async function main() {
   // Hash the password
   const hashedPassword = await bcrypt.hash("password123", 10);
@@ -60,9 +52,8 @@ async function main() {
     })
   ]);
 
-  // Create meals
-  await Promise.all([
-    // Combos
+  // Create meals and store their IDs
+  const [combo1, combo2, combo3, cafeAmericano, cafeFit, cafeContinental, fileMignon, salmao, risoto, tiramisu, cheesecake, brownie, refrigerante, suco, agua] = await Promise.all([
     prisma.meal.create({
       data: {
         name: "Combo 1 - Hambúrguer Clássico",
@@ -93,8 +84,6 @@ async function main() {
         restaurantId: restaurant.id
       }
     }),
-
-    // Café da Manhã
     prisma.meal.create({
       data: {
         name: "Café da Manhã Americano",
@@ -125,8 +114,6 @@ async function main() {
         restaurantId: restaurant.id
       }
     }),
-
-    // Pratos Principais
     prisma.meal.create({
       data: {
         name: "Filé Mignon ao Molho Madeira",
@@ -157,8 +144,6 @@ async function main() {
         restaurantId: restaurant.id
       }
     }),
-
-    // Sobremesas
     prisma.meal.create({
       data: {
         name: "Tiramisu",
@@ -189,8 +174,6 @@ async function main() {
         restaurantId: restaurant.id
       }
     }),
-
-    // Bebidas
     prisma.meal.create({
       data: {
         name: "Refrigerante",
@@ -223,8 +206,8 @@ async function main() {
     })
   ]);
 
-  // Create extras
-  await Promise.all([
+  // Create extras and store their IDs
+  const [ketchup, mayonnaise, queijoExtra, bacon, molhoBBQ, caldaChocolate, gelo] = await Promise.all([
     prisma.extra.create({
       data: {
         name: "Ketchup",
@@ -239,7 +222,6 @@ async function main() {
         restaurantId: restaurant.id
       }
     }),
-    // Adicionando mais itens personalizados
     prisma.extra.create({
       data: {
         name: "Queijo Extra",
@@ -260,6 +242,35 @@ async function main() {
         price: 0.75,
         restaurantId: restaurant.id
       }
+    }),
+    prisma.extra.create({
+      data: {
+        name: "Calda de Chocolate",
+        price: 0.8,
+        restaurantId: restaurant.id
+      }
+    }),
+    prisma.extra.create({
+      data: {
+        name: "Gelo",
+        price: 0.2,
+        restaurantId: restaurant.id
+      }
+    })
+  ]);
+
+  // Associate extras with meals
+  await Promise.all([
+    prisma.mealExtra.createMany({
+      data: [
+        { mealId: combo1.id, extraId: ketchup.id },
+        { mealId: combo1.id, extraId: bacon.id },
+        { mealId: combo2.id, extraId: molhoBBQ.id },
+        { mealId: cafeAmericano.id, extraId: queijoExtra.id },
+        { mealId: cafeFit.id, extraId: caldaChocolate.id },
+        { mealId: brownie.id, extraId: caldaChocolate.id },
+        { mealId: refrigerante.id, extraId: gelo.id },
+      ]
     })
   ]);
 

@@ -4,7 +4,7 @@ import Link from "next/link"
 import { Button } from "./ui/button"
 import { Sheet, SheetTrigger, SheetContent } from "./ui/sheet"
 import { Card, CardContent } from "./ui/card"
-import { LocateIcon, PhoneIcon, Trash } from "lucide-react" // Import the Trash component
+import { CarTaxiFront, LocateIcon, PhoneIcon, Trash } from "lucide-react" // Import the Trash component
 import {
   Dialog,
   DialogContent,
@@ -139,7 +139,7 @@ export default function Food() {
                 size="icon"
                 className="text-white border-white"
               >
-                <img src="../cart.png" className="w-6 h-6" />
+                <img src='image.png' className="w-6 h-6" />
                 <span className="sr-only">Carrinho</span>
               </Button>
             </SheetTrigger>
@@ -150,7 +150,7 @@ export default function Food() {
       <div className="space-y-2">
         {cart.map((item, index) => (
           <div key={index} className="flex flex-col">
-            <span>{item.name} ({item.price})</span>
+            <span>{item.name} ({item.price.toFixed(2)})</span>
             {item.extras && item.extras.length > 0 && (
               <div className="ml-4 text-sm">
                 {item.extras.map((extra, extraIndex) => (
