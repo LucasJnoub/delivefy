@@ -1,13 +1,14 @@
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import * as bcrypt from "bcrypt";
 
-const prisma = new PrismaClient({
-  datasources: {
-        db: {
-          url:"postgres://postgres:abc123@104.248.229.81:8080/websocket"
-        }
+// const prisma = new PrismaClient({
+//   datasources: {
+//         db: {
+//           url:"postgres://postgres:abc123@104.248.229.81:8080/websocket"
+//         }
       
-  }})
+//   }})
 async function main() {
   // Hash the password
   const hashedPassword = await bcrypt.hash("password123", 10);

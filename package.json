@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "npx prisma db push --schema=./prisma/schema.prisma && npx prisma generate --schema=./prisma/schema.prisma && node ./prisma/seed.js && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
