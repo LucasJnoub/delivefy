@@ -1,0 +1,94 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Restaurant {
+  id          String     @id @default(cuid())
+  name        String
+  address     String
+  phone       String
+  whatsapp    String
+  categories  Category[]
+  meals       Meal[]
+  extras      Extra[]    @relation("RestaurantExtras")
+  orders      Order[]
+  owner       Owner      @relation(fields: [ownerId], references: [id])
+  ownerId     String
+}
+
+model Owner {
+  id           String       @id @default(cuid())
+  email        String       @unique
+  password     String
+  name         String
+  restaurants  Restaurant[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Category {
+  id           String     @id @default(cuid())
+  name         String
+  meals        Meal[]
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId String
+}
+
+model Meal {
+  id           String     @id @default(cuid())
+  name         String
+  price        Float
+  description  String
+  imageUrl     String
+  category     Category   @relation(fields: [categoryId], references: [id])
+  categoryId   String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId String
+  orderItems   OrderItem[]
+  extras       MealExtra[]
+}
+
+model Extra {
+  id           String     @id @default(cuid())
+  name         String
+  price        Float
+  restaurant   Restaurant @relation("RestaurantExtras", fields: [restaurantId], references: [id])
+  restaurantId String
+  orderItems   OrderItem[] @relation("OrderItemExtras")
+  meals        MealExtra[]
+}
+
+model MealExtra {
+  id        String   @id @default(cuid())
+  mealId    String
+  extraId   String
+  meal      Meal     @relation(fields: [mealId], references: [id])
+  extra     Extra    @relation(fields: [extraId], references: [id])
+}
+
+model Order {
+  id           String     @id @default(cuid())
+  createdAt    DateTime   @default(now())
+  customerName String
+  customerPhone String
+  totalAmount  Float
+  status       String     @default("pending")
+  items        OrderItem[]
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId String
+}
+
+model OrderItem {
+  id       String @id @default(cuid())
+  quantity Int
+  meal     Meal   @relation(fields: [mealId], references: [id])
+  mealId   String
+  extras   Extra[] @relation("OrderItemExtras")
+  order    Order  @relation(fields: [orderId], references: [id])
+  orderId  String
+}
